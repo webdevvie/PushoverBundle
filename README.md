@@ -44,6 +44,10 @@ Follow the questions to send a test message
 
 In your code 
 ------------
+
+Within your application (in this case a controller) you can send a message to a user's pushover using the following code
+
+
 ```php
 
     # get the service from the container;
@@ -59,3 +63,4 @@ In your code
     # Now you can check on the response object with $response->isSent();
     
 ```
+
