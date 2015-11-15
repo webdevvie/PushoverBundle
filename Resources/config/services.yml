@@ -1,0 +1,11 @@
+services:
+    pushover:
+        class: Webdevvie\PushoverBundle\Service\PushoverService
+        arguments:
+          - @pushover.guzzle
+          - "%webdevvie_pushover.params%"
+
+    pushover.guzzle:
+        class: Guzzle\Http\Client
+        arguments:
+            - 'https://api.pushover.net/'
