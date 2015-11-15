@@ -36,7 +36,7 @@ class PushoverMessage
      *
      * @var array
      */
-    public static $availableSounds = [
+    private $availableSounds = [
         'pushover',
         'bike',
         'bugle',
@@ -86,6 +86,164 @@ class PushoverMessage
     private $message;
 
     /**
+     * @var integer
+     */
+    private $priority =0;
+    /**
+     * @var integer
+     */
+    private $expire=3600;
+
+    /**
+     * @var integer
+     */
+    private $retry=60;
+
+    /**
+     * @var string
+     */
+    private $url;
+
+    /**
+     * @var string
+     */
+    private $urlTitle;
+
+    /**
+     * @var integer
+     */
+    private $time;
+
+    /**
+     * @var string
+     */
+    private $callback;
+
+    const PRIORITY_NOALERT = -2;
+    const PRIORITY_QUIET = -1;
+    const PRIORITY_NONE = 0;
+    const PRIORITY_HIGH = 1;
+    const PRIORITY_REQUIRE_ACK = 2;
+
+    /**
+     * @return string
+     */
+    public function getCallback()
+    {
+        return $this->callback;
+    }
+
+    /**
+     * @param string $callback
+     * @return PushoverMessage
+     */
+    public function setCallback($callback)
+    {
+        $this->callback = $callback;
+        return $this;
+    }
+
+    /**
+     * @return integer
+     */
+    public function getExpire()
+    {
+        return $this->expire;
+    }
+
+    /**
+     * @param integer $expire
+     * @return PushoverMessage
+     */
+    public function setExpire($expire)
+    {
+        $this->expire = $expire;
+        return $this;
+    }
+
+    /**
+     * @return integer
+     */
+    public function getRetry()
+    {
+        return $this->retry;
+    }
+
+    /**
+     * @param integer $retry
+     * @return PushoverMessage
+     */
+    public function setRetry($retry)
+    {
+        $this->retry = $retry;
+        return $this;
+    }
+
+
+    /**
+     * @return integer
+     */
+    public function getTime()
+    {
+        return $this->time;
+    }
+
+    /**
+     * @param \DateTime $time
+     * @return PushoverMessage
+     */
+    public function setTime(\DateTime $time)
+    {
+        $this->time = $time->getTimestamp();
+        return $this;
+    }
+
+
+    /**
+     * @return string
+     */
+    public function getUrl()
+    {
+        return $this->url;
+    }
+
+    /**
+     * @param string $url
+     * @return PushoverMessage
+     */
+    public function setUrl($url)
+    {
+        $this->url = $url;
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getUrlTitle()
+    {
+        return $this->urlTitle;
+    }
+
+    /**
+     * @param string $urlTitle
+     * @return PushoverMessage
+     */
+    public function setUrlTitle($urlTitle)
+    {
+        $this->urlTitle = $urlTitle;
+        return $this;
+    }
+
+    /**
+     * @return array
+     */
+    public function getAvailableSounds()
+    {
+        return $this->availableSounds;
+    }
+
+    /**
      * @return string
      */
     public function getSound()
@@ -94,12 +252,30 @@ class PushoverMessage
     }
 
     /**
+     * @return integer
+     */
+    public function getPriority()
+    {
+        return $this->priority;
+    }
+
+    /**
+     * @param integer $priority
+     * @return PushoverMessage
+     */
+    public function setPriority($priority)
+    {
+        $this->priority = $priority;
+        return $this;
+    }
+
+    /**
      * @param string $sound
      * @return PushoverMessage
      */
     public function setSound($sound)
     {
-        if (!in_array($sound, self::$availableSounds)) {
+        if (!in_array($sound, $this->availableSounds)) {
             $this->sound = self::SOUND_NONE;
         } else {
             $this->sound = $sound;

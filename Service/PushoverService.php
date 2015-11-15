@@ -38,36 +38,60 @@ class PushoverService
         $body = [
             "token" => $this->params['token'],
             'user' => $message->getUser(),
-            'title' => $message->getTitle(),
             'message' => $message->getMessage(),
             'sound' => $message->getSound()
         ];
         if ($message->getDevice() != '') {
             $body['device'] = $message->getDevice();
         }
+        if ($message->getTitle() != '') {
+            $body['title'] = $message->getTitle();
+        }
+        if ($message->getPriority() >= 2) {
+            $body['priority'] = $message->getPriority();
+            $body['expire'] = $message->getExpire();
+            $body['retry'] = $message->getRetry();
+            if ($message->getCallback() != '') {
+                $body['callback'] = $message->getCallback();
+            }
 
+        }
+        if (!is_null($message->getTime())) {
+            $body['timestamp'] = $message->getTime();
+        }
+        if ($message->getUrl() != '') {
+            $body['url'] = $message->getUrl();
+        }
+        if ($message->getUrlTitle() != '') {
+            $body['url_title'] = $message->getUrlTitle();
+        }
         $request = $this->client->createRequest('POST', '/1/messages.json', null, $body);
 
-        try
-        {
+        try {
             $response = $request->send();
             $responseBody = $response->getBody(true);
             return new PushoverResponse($responseBody);
 
-        }
-        catch(\Guzzle\Http\Exception\ClientErrorResponseException $exception)
-        {
+        } catch (\Guzzle\Http\Exception\ClientErrorResponseException $exception) {
             return new PushoverResponse($exception->getResponse()->getBody(true));
         }
 
     }
 
     /**
-     * @param string $requestId
+     * @param string $receipt
+     * @return PushoverResponse
      */
-    public function getReceiptStatus($requestId)
+    public function cancelReceipt($receipt)
     {
-        //TODO
+        $body = ['token' => $this->params['token']];
+        $request = $this->client->createRequest("POST", "/1/receipts/" . $receipt . "/cancel.json", null, $body);
+        try {
+            $response = $request->send();
+            $responseBody = $response->getBody(true);
+            return new PushoverResponse($responseBody);
+        } catch (\Guzzle\Http\Exception\ClientErrorResponseException $exception) {
+            return new PushoverResponse($exception->getResponse()->getBody(true));
+        }
     }
-
 }

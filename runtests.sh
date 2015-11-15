@@ -1,1 +1,1 @@
-bin/phpunit --bootstrap vendor/autoload.php tests
+bin/phpunit --bootstrap vendor/autoload.php --coverage-html coverage/ tests

@@ -2,7 +2,6 @@
 
 namespace Webdevvie\PushoverBundle\Response;
 
-
 /**
  * Class PushoverResponse
  * @package Webdevvie\PushoverBundle\Response
@@ -26,27 +25,82 @@ class PushoverResponse
     /**
      * @var string
      */
+    protected $receipt;
+
+    /**
+     * @var string
+     */
     protected $user;
 
+    /**
+     * @var array
+     */
+    private $map = [
+        "status" => "boolean:sent",
+        "request" => "requestId",
+        "user" => "user",
+        "errors" => "array:errors",
+        "receipt" => "receipt"
+    ];
+
+    /**
+     * PushoverResponse constructor.
+     * @param string $responseBody
+     */
     public function __construct($responseBody)
     {
+
         $response = json_decode($responseBody);
+        $this->parseProperties($response);
+    }
 
+    /**
+     * @param object $response
+     */
+    private function parseProperties($response)
+    {
+        $vars = get_object_vars($response);
 
-        if (isset($response->status) && $response->status == 1) {
-            $this->sent = true;
-        }
-        if (isset($response->request) && $response->request != '') {
-            $this->requestId = $response->request;
-        }
-        if (isset($response->user) && $response->user != '') {
-            $this->user = $response->user;
-        }
-        if(isset($response->errors) && is_array($response->errors))
-        {
-            $this->errors = $response->errors;
-        }
+        foreach ($vars as $var => $value) {
+            $mapParts = explode(":", $this->map[$var]);
+            if (count($mapParts) > 1) {
+                $mapped = $mapParts[1];
+                $mthd = "mapProperty".ucfirst($mapParts[0]);
+                $this->$mapped = $this->$mthd($value);
+            } else {
+                $mapped = $mapParts[0];
+                $this->$mapped = $value;
+            }
 
+        }
+    }
+
+    /**
+     * @param string $value
+     * @SuppressWarnings(PHPMD.UnusedPrivateMethod)
+     * @return boolean
+     */
+    private function mapPropertyBoolean($value)
+    {
+        return ($value==1);
+    }
+
+    /**
+     * @param array $value
+     * @SuppressWarnings(PHPMD.UnusedPrivateMethod)
+     * @return array
+     */
+    private function mapPropertyArray(array $value)
+    {
+        return (is_array($value)?$value:[]);
+    }
+
+    /**
+     * @return string
+     */
+    public function getReceipt()
+    {
+        return $this->receipt;
     }
 
     /**

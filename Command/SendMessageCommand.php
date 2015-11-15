@@ -58,17 +58,24 @@ class SendMessageCommand extends ContainerAwareCommand
         $message = new PushoverMessage();
         $message->setUser($user);
 
+        //uncomment this to send a priority message
+        //$message->setPriority(2);
+
         $selected = $dialog->select(
             $output,
             '<question>Please enter the tone to use:</question>',
-            PushoverMessage::$availableSounds,
+            $message->getAvailableSounds(),
             0,
             false,
             'Value "%s" is invalid',
             false
         );
 
-        $selectedSound =  PushoverMessage::$availableSounds[$selected];
+
+        $availableSounds = $message->getAvailableSounds();
+
+        $selectedSound = $availableSounds[$selected];
+
 
         $message->setSound($selectedSound);
 
@@ -109,20 +116,16 @@ class SendMessageCommand extends ContainerAwareCommand
             return;
         }
         $response = $pushover->sendMessage($message);
-        if(count($response->getErrors())==0)
-        {
-            $output->writeln("<info>Message sent:</info>".$response->getRequestId());
-        }
-        else
-        {
-
+        if (count($response->getErrors()) == 0) {
+            $output->writeln("<info>Message sent:</info>" . $response->getRequestId());
+            if ($response->getReceipt() != '') {
+                $output->writeln("<info>Receipt:</info>" . $response->getReceipt());
+            }
+        } else {
             $output->writeln("<error>Message not sent</error>");
-            foreach($response->getErrors() as $error)
-            {
-                $output->writeln("<error>".$error."</error>");
+            foreach ($response->getErrors() as $error) {
+                $output->writeln("<error>" . $error . "</error>");
             }
         }
-
-
     }
 }
