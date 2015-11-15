@@ -1,7 +1,8 @@
 PushoverBundle
 ==============
 
-This is a simple bundle for Symfony2 to send messages to Pushover
+This is a simple bundle for Symfony2 to send messages through Pushover. 
+This library is still in development and its interface is subject to change.
 
 To install
 ----------
