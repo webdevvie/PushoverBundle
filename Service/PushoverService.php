@@ -32,11 +32,13 @@ class PushoverService
      * @param PushoverMessage $message
      * @return PushoverResponse
      */
-    public function sendMessage(PushoverMessage $message)
+    public function sendMessage(PushoverMessage $message, $token = '')
     {
-
+        if ($token == '') {
+            $token = $this->params['token'];
+        }
         $body = [
-            "token" => $this->params['token'],
+            "token" => $token,
             'user' => $message->getUser(),
             'message' => $message->getMessage(),
             'sound' => $message->getSound()
@@ -82,9 +84,12 @@ class PushoverService
      * @param string $receipt
      * @return PushoverResponse
      */
-    public function cancelReceipt($receipt)
+    public function cancelReceipt($receipt, $token = '')
     {
-        $body = ['token' => $this->params['token']];
+        if ($token == '') {
+            $token = $this->params['token'];
+        }
+        $body = ['token' => $token];
         $request = $this->client->createRequest("POST", "/1/receipts/" . $receipt . "/cancel.json", null, $body);
         try {
             $response = $request->send();

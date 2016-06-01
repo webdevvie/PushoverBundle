@@ -29,10 +29,5 @@
   "autoload": {
     "psr-0": { "Webdevvie\\PushoverBundle": "" }
   },
-  "extra": {
-    "branch-alias": {
-      "dev-master": "0.2-dev"
-    }
-  },
   "target-dir": "Webdevvie/PushoverBundle"
 }
