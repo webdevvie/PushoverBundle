@@ -30,6 +30,7 @@ class PushoverService
 
     /**
      * @param PushoverMessage $message
+     * @param string $token
      * @return PushoverResponse
      */
     public function sendMessage(PushoverMessage $message, $token = '')
@@ -82,6 +83,7 @@ class PushoverService
 
     /**
      * @param string $receipt
+     * @param string $token
      * @return PushoverResponse
      */
     public function cancelReceipt($receipt, $token = '')
