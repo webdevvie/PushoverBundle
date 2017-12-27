@@ -2,7 +2,7 @@ services:
     pushover:
         class: Webdevvie\PushoverBundle\Service\PushoverService
         arguments:
-          - @pushover.guzzle
+          - "@pushover.guzzle"
           - "%webdevvie_pushover.params%"
 
     pushover.guzzle:
